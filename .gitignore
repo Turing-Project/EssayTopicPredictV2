@@ -1,3 +1,9 @@
+.idea/
+dataset/
+output/
+.vs/
+data/
+paper/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -126,4 +132,8 @@ venv.bak/
 dmypy.json
 
 # Pyre type checker
+<<<<<<< HEAD
 .pyre/
+=======
+.pyre/
+>>>>>>> 2329ddfe15b15c6033d591c97f38e967c53ddfba
