@@ -25,7 +25,36 @@ for root, dirs, files in os.walk(r'D:\桌面\创作\AI预测高考作文\Spider-
         portion = os.path.splitext(filename)
         os.chdir(root)
         # 如果后缀是.dat
-        if portion[1] == ".html":
+        if portion[1] == ".csv":
             #把原文件后缀名改为 txt
-            newName = portion[0] + ".txt"
+            newName = portion[0] + ".csv"
             os.renames(filename, newName)
+
+
+### 提取摘要-这部分放在Tokenization函数里
+def tmp():
+    import jieba,os,re
+    from gensim import corpora, models, similarities
+
+    """创建停用词列表"""
+    def stopwordslist():
+        stopwords = [line.strip() for line in open('../stopwords.txt', encoding='UTF-8').readlines()]
+        return stopwords
+
+    """对句子进行中文分词"""
+    def seg_depart(sentence):
+        sentence_depart = jieba.cut(sentence.strip())
+        stopwords = stopwordslist()
+        outstr = ''
+        for word in sentence_depart:
+            if word not in stopwords:
+                outstr += word
+                outstr += " "
+        return outstr
+
+    train = []
+    for j,line in tqdm(enumerate(df["摘要"])):
+        line = re.sub(r'[^\u4e00-\u9fa5]+','',line)
+        line_seg = seg_depart(line.strip())
+        line = [word.strip() for word in line_seg.split(' ')]
+        train.append(line[:-1])

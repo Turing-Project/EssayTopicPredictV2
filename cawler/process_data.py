@@ -187,16 +187,12 @@ s.close()
 
 
 # ### 提取摘要
-
-# In[27]:
-
-
 import jieba,os,re
 from gensim import corpora, models, similarities
 
 """创建停用词列表"""
 def stopwordslist():
-    stopwords = [line.strip() for line in open('./stopwords.txt',encoding='UTF-8').readlines()]
+    stopwords = [line.strip() for line in open('../stopwords.txt', encoding='UTF-8').readlines()]
     return stopwords
 
 """对句子进行中文分词"""
@@ -210,19 +206,12 @@ def seg_depart(sentence):
             outstr += " "
     return outstr
 
-
-# In[28]:
-
-
 train = []
 for j,line in tqdm(enumerate(df["摘要"])):
     line = re.sub(r'[^\u4e00-\u9fa5]+','',line)
     line_seg = seg_depart(line.strip())
     line = [word.strip() for word in line_seg.split(' ')]
     train.append(line[:-1])
-
-
-# In[31]:
 
 
 """构建词频矩阵，训练LDA模型"""
@@ -237,11 +226,4 @@ print("20个主题的单词分布为：\n")
 for topic in topic_list:
     print(topic)
 
-
-# In[32]:
-
-
-import pyLDAvis.gensim_models
-data = pyLDAvis.gensim_models.prepare(lda, corpus=corpus,dictionary=dictionary)
-pyLDAvis.display(data=data)
 
