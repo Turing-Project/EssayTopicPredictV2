@@ -1,18 +1,14 @@
 # coding=utf-8
 import argparse
 import logging
-import os, langid, pickle, datetime, random, time, re
+import os, langid, datetime, re
 from copy import deepcopy
-
-import jieba
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
 from bertopic import BERTopic
-from nltk import PorterStemmer
-from nltk.corpus import stopwords
-from sklearn.metrics.pairwise import cosine_similarity
+
 
 from model.TrendingBaseModel import TrendingBaseModelBuilder
 from flair.embeddings import TransformerDocumentEmbeddings
@@ -58,8 +54,8 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         langid.set_languages(self.lan_candidates)
         self.en_filter = ['NN', 'NNS', 'NNP', 'NNPS']  # only reserve noun
         self.n_gram_range = (2, 2)
-        self.min_topic_size = 5
-        self.diversity = 0.2
+        self.min_topic_size = 10
+        self.diversity = 0.1
         self.num_scores = 50000
 
     def word2VecGaussianModel(self):
@@ -75,7 +71,8 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
 
         roberta = TransformerDocumentEmbeddings('hfl/chinese-roberta-wwm-ext')
         if roberta:
-            model = BERTopic(embedding_model=roberta)
+            model = BERTopic(embedding_model=roberta, verbose=True, low_memory=True, n_gram_range=self.n_gram_range,
+                             min_topic_size=self.min_topic_size, diversity=self.diversity)
         else:
             model = BERTopic(embedding_model="all-MiniLM-L6-v2", language="english", calculate_probabilities=True,
                              n_gram_range=self.n_gram_range, nr_topics='auto', min_topic_size=self.min_topic_size,
@@ -84,12 +81,18 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         if len(self.dataset) < 100:
             raise Exception(f"Too less feeds are fetched ({len(self.dataset)}<100), please set a longer day period.")
 
+        f"model has been load through hugging face, then start training in{model_version}..."
         topics, probabilities = model.fit_transform(self.dataset)
         f"{topics=}" \
         f"{probabilities=}"
 
-        topic_count = deepcopy(model.topic_sizes)
-        topic_names = deepcopy(model.topic_names)
+
+
+        topic_count = deepcopy(list(model.topic_sizes.values())[:])
+        topic_names = deepcopy(list(model.topic_names.values())[:])
+        result = pd.DataFrame(zip(topic_names, topic_count))
+        result.to_csv("topic_result.csv", encoding='utf_8_sig', mode='w', index=False, sep=',', header=False)
+
         del topic_count[-1]
         # print(f"{first_Topic=}")
 
@@ -111,10 +114,8 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
 
     @staticmethod
     def saveFile(path, filename, data):
-        # 如果路径不存在，就创建路径
         if not os.path.exists(path):
             os.makedirs(path)
-        # 保存数据
         dataframe = pd.DataFrame(data)
         dataframe.to_csv(path + filename + ".csv", encoding='utf_8_sig', mode='w', index=False, sep=',', header=False)
 
@@ -129,17 +130,25 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         # 2.lowercase,tokenized duplication-reduce and stemming/Lemmatization
         # 3.filter infrequent words less than 5 time in the entire corpus and short documents
         """
-        for root, dirs, files in os.walk(TMP_PATH):
-            for file in files:
-                filename = os.path.join(root, file)
-                if os.path.isfile(filename):
-                    self.dataset = pd.read_csv(filename, encoding='utf_8_sig', index=False, sep=',', header=False)
-                    return
+        global local_cache
+        combined_data = pd.DataFrame()
+        step = 0
+        local_cache = False
         try:
+            for root, dirs, files in os.walk(TMP_PATH):
+                for file in files:
+                    filename = os.path.join(root, file)
+                    if os.path.isfile(filename):
+                        combined_data = pd.read_csv(filename, encoding='utf_8_sig', sep=',')
+                        combined_data = combined_data.sample(n=20000, replace=False, weights=None, axis=0)
+                        local_cache = True
+                        break
+
             # self._fetch_nft_scores(self.num_scores)
-            combined_data = pd.DataFrame()
-            for content_type in self.config["content_types"]:
-                combined_data = combined_data.append(self.items_dict.get(content_type), ignore_index=True)
+            if local_cache is not True:
+                for content_type in self.config["content_types"]:
+                    combined_data = combined_data.append(self.items_dict.get(content_type), ignore_index=True)
+
             combined_data.drop_duplicates(keep='last')
             combined_data.dropna()
 
@@ -155,7 +164,6 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
                 sentence = list_value[0]
                 if sentence is None:
                     continue
-                # 先不对每个分词结果过滤词性（名词）看看聚类结果
                 # 0. Check language (only consider English in the first version)
                 lan_identify, _ = langid.classify(sentence)  # identify language the sentence is.
                 if lan_identify != self.lan_candidates[0]:  # en
@@ -174,8 +182,10 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         except Exception as e:
             logging.Logger.info("catch error: ", e)
         finally:
-            self.saveFile(TMP_PATH, "processed_data", self.dataset)
+            if local_cache is not True:
+                self.saveFile(TMP_PATH, "processed_data", self.dataset)
             print("final dataset has been saved, with %d" % len(self.dataset))
+        self.dataset = [str(x) for x in self.dataset]
 
     def jsonSummaryCheck(self, dict_path):
         if self.json_dict:
