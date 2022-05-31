@@ -5,12 +5,11 @@ import os, langid, datetime, re
 from copy import deepcopy
 import numpy as np
 import pandas as pd
+from numba import Object
 from tqdm import tqdm
-
 from bertopic import BERTopic
 
 
-from model.TrendingBaseModel import TrendingBaseModelBuilder
 from flair.embeddings import TransformerDocumentEmbeddings
 
 INPUT_PATH = os.path.dirname(os.path.realpath(__file__)) + '/dataset/'
@@ -18,18 +17,17 @@ MODEL_PATH = os.path.dirname(os.path.realpath(__file__)) + '/model/'
 OUTPUT_PATH = os.path.dirname(os.path.realpath(__file__)) + '/output/'
 TMP_PATH = os.path.dirname(os.path.realpath(__file__)) + '/tmp/'
 BAN_WORD_PATH = os.path.dirname(os.path.realpath(__file__)) + '/model/english_dictionary.txt'
-# https://github.com/downloads/wear/harmonious_dictionary/dictionaries.zip
 
 for path in [INPUT_PATH, MODEL_PATH, OUTPUT_PATH]:
     if not os.path.exists(path):
         os.makedirs(path)
 
 
-class EssayTopicPredictModel(TrendingBaseModelBuilder):
+class EssayTopicPredictModel(Object):
     """
-    @:param rss3.io
-    @:keyword Revery trending
-    @:date: 2022/04/26
+    @:param Turing's Cat
+    @:keyword Essay Topic Predict
+    @:date: 2022/05/26
     """
 
     def __init__(self,):
@@ -49,10 +47,6 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         self.items_dict["wenzhang"] = []
         self.items_dict["yangshi"] = []
         self.items_dict["daily"] = []
-
-        self.lan_candidates = ['zh']  # , 'zh']
-        langid.set_languages(self.lan_candidates)
-        self.en_filter = ['NN', 'NNS', 'NNP', 'NNPS']  # only reserve noun
         self.n_gram_range = (2, 2)
         self.min_topic_size = 10
         self.diversity = 0.1
@@ -85,7 +79,6 @@ class EssayTopicPredictModel(TrendingBaseModelBuilder):
         topics, probabilities = model.fit_transform(self.dataset)
         f"{topics=}" \
         f"{probabilities=}"
-
 
 
         topic_count = deepcopy(list(model.topic_sizes.values())[:])
@@ -241,26 +234,7 @@ def test():
     newDataHandler.datePreprocess(INPUT_PATH)
     newDataHandler.wordTokenPreprocessor()
     newDataHandler.BERTopicModel()
-    newDataHandler.jsonSummaryCheck(BAN_WORD_PATH)
     print(f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] finished")
-
-
-def online():
-    newDataHandler = EssayTopicPredictModel()
-    newDataHandler.wordTokenPreprocessor()
-    newDataHandler.BERTopicModel()
-    newDataHandler.jsonSummaryCheck(BAN_WORD_PATH)
-    print(f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] finished")
-
-
-def weekly_virsualisation():
-    newDataHandler = EssayTopicPredictModel()
-    newDataHandler.VISUAL_MODEL = True
-    newDataHandler.SAVE_JSON = False
-    newDataHandler.config['day_period'] = 7
-    newDataHandler.loadData_ProGod(type_list=newDataHandler.config["content_types"])
-    newDataHandler.wordTokenPreprocessor()
-    newDataHandler.BERTopicModel()
 
 
 if __name__ == '__main__':
@@ -272,9 +246,6 @@ if __name__ == '__main__':
     print('args:\n' + args.__repr__())
 
     if args.online:
-        online()
+        pass
     else:
         test()
-
-    if args.visualize:
-        weekly_virsualisation()
