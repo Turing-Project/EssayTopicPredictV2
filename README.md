@@ -170,7 +170,7 @@ python run.py --model bert
 @misc{EssayKillerBrain,
   author = {Turing's Cat},
   title = {Autowritting Ai Framework},
-  year = {2020},
+  year = {2022},
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/AlanTur1ng/EssayTopicPredict}},
