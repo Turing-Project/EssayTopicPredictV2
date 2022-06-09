@@ -15,7 +15,6 @@ EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模
 
 **致谢**
 
-感谢开源作者[@imcaspar](https://github.com/imcaspar)  提供GPT-2中文预训练框架与数据支持。
 <br>
 
 ## 框架说明
