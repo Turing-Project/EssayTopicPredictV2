@@ -149,19 +149,6 @@ KMeans尤其容易受到异常值的影响。当算法遍历质心时，在达�
 ```bash
 python run.py --model bert
 ```
-<br>
-
-![](https://github.com/EssayKillerBrain/EssayKiller_V2/blob/master/References/attachments/Clipboard_2020-09-29-16-40-19.png)
-
-测试时，需要用正则表达式过滤考试专用词，包括“阅读下面的材料，根据要求写作”，“要求：xxx”，“请完成/请结合/请综合xx”。
-
-比如
->![](https://github.com/EssayKillerBrain/EssayKiller_V2/blob/master/References/attachments/Clipboard_2020-09-29-17-17-30.png)
-
-
-    人们用眼睛看他人、看世界，却无法直接看到完整的自己。所以，在人生的旅程中，我们需要寻找各种“镜子”、不断绘制“自画像”来审视自我，尝试回答“我是怎样的人”“我想过怎样的生活”“我能做些什么”“如何生活得更有意义”等重要的问题。
-
-<br>
 
 
 ## Citation
