@@ -8,9 +8,6 @@
 ## 项目简介
 EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模型所构建的生成式考试题目AI框架，目前第一版finetune模型针对高考作文，可以有效生成符合人类认知的文章题目。
 
-| 项目作者        | 主页1           | 主页2  | 主页3 |
-| ------------- |:-------------:|:----:|:---:|
-| 图灵的猫       | [知乎](https://www.zhihu.com/people/dong-xi-97-29) |[B站](https://space.bilibili.com/371846699) | [Youtube](https://www.youtube.com/channel/UCoEVP6iTw5sfozUGLLWJyDg/featured) |
 
 
 **致谢**
@@ -66,22 +63,6 @@ EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模
 ```bash
 cd train  
 python train.py
-```
-
-**训练结果**
-```python
-Epoch 3/100
-25621/25621 [==============================] - 15856s 619ms/step - loss: 0.1035 - acc: 0.9816 - val_loss: 0.1060 - val_acc: 0.9823
-Epoch 4/100
-25621/25621 [==============================] - 15651s 611ms/step - loss: 0.0798 - acc: 0.9879 - val_loss: 0.0848 - val_acc: 0.9878
-Epoch 5/100
-25621/25621 [==============================] - 16510s 644ms/step - loss: 0.0732 - acc: 0.9889 - val_loss: 0.0815 - val_acc: 0.9881
-Epoch 6/100
-25621/25621 [==============================] - 15621s 610ms/step - loss: 0.0691 - acc: 0.9895 - val_loss: 0.0791 - val_acc: 0.9886
-Epoch 7/100
-25621/25621 [==============================] - 15782s 616ms/step - loss: 0.0666 - acc: 0.9899 - val_loss: 0.0787 - val_acc: 0.9887
-Epoch 8/100
-25621/25621 [==============================] - 15560s 607ms/step - loss: 0.0645 - acc: 0.9903 - val_loss: 0.0771 - val_acc: 0.9888
 ```
 
 
