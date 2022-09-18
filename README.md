@@ -7,10 +7,9 @@
 
 ## 项目简介
 EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模型所构建的生成式考试题目AI框架，目前第一版finetune模型针对高考作文，可以有效生成符合人类认知的文章题目。
-
-
-
-**致谢**
+| 项目作者        | 主页1           | 主页2  | 
+| ------------- |:------:|:----:|
+| Y1ran       | [CSDN](https://y1ran.blog.csdn.net/) |[Github](https://github.com/Y1ran) |
 
 <br>
 
