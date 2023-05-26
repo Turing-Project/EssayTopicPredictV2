@@ -2,11 +2,11 @@
 
 ![image](https://img.shields.io/badge/License-Apache--2.0-green) ![image](https://img.shields.io/badge/License-MIT-orange)  ![image](https://img.shields.io/badge/License-Anti--996-red)  ![image](https://img.shields.io/badge/pypi-v0.0.1a4-yellowgreen) ![image](https://img.shields.io/badge/stars-%3C%201k-blue) ![image](https://img.shields.io/badge/issues-1%20open-brightgreen)  
 
-通用型高考作文题目预测模型 v1.0 -人工智能框架，仅限交流与科普。
+通用型高考作文题目预测模型 v2.0 -人工智能框架，仅限交流与科普。
 
 
 ## 项目简介
-EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模型所构建的生成式考试题目AI框架，目前第一版finetune模型针对高考作文，可以有效生成符合人类认知的文章题目。
+EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模型所构建的生成式AIGC考试题预测框架，目前第一版finetune模型针对高考作文，可以有效生成符合人类认知的文章题目。
 | 项目作者        | 主页1           | 主页2  | 
 | ------------- |:------:|:----:|
 | Y1ran       | [CSDN](https://y1ran.blog.csdn.net/) |[Github](https://github.com/Y1ran) |
@@ -19,6 +19,7 @@ EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模
 - [x] 17亿参数多模块异构深度神经网络，超2亿条预训练数据
 - [x] 可结合作文生成器一起使用：[17亿参数作文杀手](https://colab.research.google.com/github/EssayKillerBrain/EssayKiller_V2/blob/master/colab_online.ipynb)
 - [x] 端到端生成，从试卷识别到答题卡输出一条龙服务
+- [x] 通过GPT-4模型进行命题指导与判断，同时也可以写/优化范文
 
 
 ## 本地环境
@@ -30,9 +31,9 @@ EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模
 * Tensorboard 1.15.2
 * Tensorflow-gpu 1.15.2
 * Requests 2.22.0
-* OpenCV 3.4.2
 * CUDA >= 10.0
 * CuDNN >= 7.6.0
+* OpenAI API
 
 ## 开发日志
 
@@ -42,7 +43,7 @@ EssayTopicPredict是基于无监督学习、模式识别与NLP领域的最新模
 * 2022.05.21 Bertopic+DBSCAN聚类算法
 * 2022.05.31 RoBerta与摘要模型调整
 * 2022.05.30 代码Review与开源发布
-
+* 2023.05.24 更新chatgpt-4框架辅助判断
 
 ## 模型结构
 整个框架分为Proprocess、Bert、DNSCAN 3个模块，每个模块的网络单独训练，参数相互独立。

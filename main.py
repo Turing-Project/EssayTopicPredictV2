@@ -3,12 +3,13 @@ import argparse
 import logging
 import os, langid, datetime, re
 from copy import deepcopy
+from typing import List
+
 import numpy as np
 import pandas as pd
 from numba import Object
 from tqdm import tqdm
 from bertopic import BERTopic
-
 
 from flair.embeddings import TransformerDocumentEmbeddings
 
@@ -30,7 +31,7 @@ class EssayTopicPredictModel(Object):
     @:date: 2022/05/26
     """
 
-    def __init__(self,):
+    def __init__(self, ):
         super().__init__()
         self.finalkey = None
         self.VISUAL_MODEL = False
@@ -41,7 +42,7 @@ class EssayTopicPredictModel(Object):
             "load_data_batch": 1e6,
             "content_types": ['weibo', 'wenzhang', 'yangshi', 'daily'],
             "day_period": 3,
-            "spec_delete_list": [' ', 'http', 'www', 'rt', 'media', 'class', 'jpg', 'com', 'twimg', 'image','png'],
+            "spec_delete_list": [' ', 'http', 'www', 'rt', 'media', 'class', 'jpg', 'com', 'twimg', 'image', 'png'],
         }
         self.items_dict["weibo"] = []
         self.items_dict["wenzhang"] = []
@@ -80,7 +81,6 @@ class EssayTopicPredictModel(Object):
         f"{topics=}" \
         f"{probabilities=}"
 
-
         topic_count = deepcopy(list(model.topic_sizes.values())[:])
         topic_names = deepcopy(list(model.topic_names.values())[:])
         result = pd.DataFrame(zip(topic_names, topic_count))
@@ -113,6 +113,7 @@ class EssayTopicPredictModel(Object):
         dataframe.to_csv(path + filename + ".csv", encoding='utf_8_sig', mode='w', index=False, sep=',', header=False)
 
     """创建停用词列表"""
+
     def stopwordslist(self):
         stopwords = [line.strip() for line in open('./stopwords.txt', encoding='UTF-8').readlines()]
         return stopwords
@@ -225,6 +226,14 @@ class EssayTopicPredictModel(Object):
                     print("logging error as %s" % e)
 
         self.PAST_TIME = self._get_past_time()
+
+    def call_gpt_helper(self, api_key: str) \
+            -> List[str]:
+        """
+        :parameter: api_key: str
+        :return:
+        """
+
 
 
 def test():

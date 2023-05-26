@@ -15,5 +15,5 @@ if ["$daily_excute" = "TRUE"]; then
   done
 fi
 
-echo "excution started in daily $daily_excute | hourly $hourly_excute" # echo is used to printf in terminal
+echo "excution started in daily $daily_excute | or hourly $hourly_excute" # echo is used to printf in terminal
 
